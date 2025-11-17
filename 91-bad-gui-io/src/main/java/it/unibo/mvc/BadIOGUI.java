@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.util.List;
+import java.nio.file.Path;
 import java.util.Random;
 
 /**
@@ -28,6 +28,7 @@ import java.util.Random;
  */
 public class BadIOGUI {
 
+    // private static final String TEST_BUTTON = "Pressed the button. Passed the test.";
     private static final String TITLE = "A very simple GUI application";
     private static final String PATH = System.getProperty("user.home")
             + File.separator
@@ -42,10 +43,14 @@ public class BadIOGUI {
     public BadIOGUI() {
         final JPanel canvas = new JPanel();
         canvas.setLayout(new BorderLayout());
+
+        // Ex 01.01
+        final JPanel canvas2 = new JPanel();
+        canvas2.setLayout(new BoxLayout(canvas2, BoxLayout.X_AXIS));
+        canvas.add(canvas2, BorderLayout.CENTER);
         final JButton write = new JButton("Write on file");
-        canvas.add(write, BorderLayout.CENTER);
-        frame.setContentPane(canvas);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        canvas2.add(write);
+
         /*
          * Handlers
          */
@@ -66,6 +71,36 @@ public class BadIOGUI {
                     e.printStackTrace(); // NOPMD: allowed as this is just an exercise
                 }
             }
+        });
+        frame.setContentPane(canvas);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        // Ex 01.02
+        final JButton buttonRead = new JButton("Read");
+        canvas2.add(buttonRead);
+
+        buttonRead.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(final ActionEvent e) {
+                /* Old code
+                System.out.println(TEST_BUTTON);*/
+
+                // Ex 01.03
+                try {
+
+                    // Con metodi statici dobbiamo mettere come segue
+                    // Path.of() crea un path a partire da una stringa
+                    for (final String s : Files.readAllLines(Path.of(PATH), StandardCharsets.UTF_8)) {
+                        System.out.println(s); // NOPMD: allowed as this is just an exercise
+                    }
+
+                } catch (final IOException exception) {
+                    JOptionPane.showMessageDialog(frame, exception, "Error", JOptionPane.ERROR_MESSAGE);
+                    exception.printStackTrace(); // NOPMD: allowed as this is just an exercise
+                }
+            }
+
         });
     }
 
@@ -88,6 +123,11 @@ public class BadIOGUI {
          * on screen. Results may vary, but it is generally the best choice.
          */
         frame.setLocationByPlatform(true);
+
+        // Ex 01.01
+        /* Reduce to minimum size */
+        frame.pack();
+
         /*
          * OK, ready to push the frame onscreen
          */
