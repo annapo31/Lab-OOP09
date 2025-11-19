@@ -54,6 +54,7 @@ public final class Controller {
      * 
      * @throws IOException if the writing fails
      */
+    @SuppressWarnings("PMD.SystemPrintln")
     public void writeTheString(final String s) throws IOException {
         try (PrintStream ps = new PrintStream(currentFile, StandardCharsets.UTF_8)) {
             ps.print(s);
